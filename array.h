@@ -130,7 +130,7 @@
  * insert an element at the given index.
  */
 #define array_insert(array, elem, index) do { \
-    assert((index) > 0 && (index) < (array).length); \
+    assert((index) >= 0 && (index) < (array).length); \
     if ((array).capacity <= (array).length) { \
         (array).capacity += (array).capacity / 2 + 1; \
         (array).buffer = realloc((array).buffer, (array).elem_size * (array).capacity); \
@@ -159,7 +159,7 @@
  * removes the element located at `index` in the array.
  */
 #define array_remove_index(array, index) do { \
-    assert((index) > 0 && (index) < (array).length); \
+    assert((index) >= 0 && (index) < (array).length); \
     if ((index) < (array).length) { \
         for (size_t i = (index); i < (array).length - 1; i++) { \
             (array).buffer[i] = (array).buffer[i + 1]; \
