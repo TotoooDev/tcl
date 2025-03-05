@@ -1,6 +1,7 @@
 /**
  * a cool, type safe, dynamic array library.
  * almost everything is a macro in here, because of the "dynamic typing" of the library.
+ * define TCL_DEFINE_ARRAYS exactly ONCE in a source file if you want to use the pre-defined array types.
  *
  * This is free and unencumbered software released into the public domain.
  *
@@ -197,6 +198,8 @@
 // no i'm not writing docs for all of this
 // sorry :)
 
+#ifdef TCL_DEFINE_ARRAYS
+
 bool unsigned_int_compare(unsigned int a, unsigned int b) { return a == b; }
 bool int_compare(int a, int b) { return a == b; }
 bool uint8_compare(uint8_t a, uint8_t b) { return a == b; }
@@ -244,5 +247,7 @@ array_double_t*         array_double_new() { array_double_t* a; array_init(a, do
 array_char_t*           array_char_new() { array_char_t* a; array_init(a, char, char_compare); return a; }
 array_str_t*            array_str_new() { array_str_t* a; array_init(a, char*, str_compare); return a; }
 array_void_t*           array_void_new() { array_void_t* a; array_init(a, void*, void_compare); return a; }
+
+#endif
 
 #endif
