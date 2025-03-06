@@ -37,8 +37,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 typedef size_t(*hashmap_hash_func_t)(uint8_t* buffer, size_t size);
-typedef void(*hashmap_iterator_t)(void* key, void* value, void* user_data);
 
 /**
  * sets the hashing function used to hash stuff in hashmaps.
@@ -113,6 +114,15 @@ hashmap_hash_func_t hashmap_get_hash_func();
 #define hashmap_iterate(hashmap, iterator, user_data) tclhashmap_iterate(&hashmap, iterator, user_data)
 
 /**
+ * iterates through all the pairs in the hashmap. `_key` is set to the current key, `_value` is set to the current value, `i` is set to the index of the pair.
+ */
+#define hashmap_foreach(_hashmap, _key, _value, _i) for (\
+    _i = 0, _key = (_hashmap).pairs[i].key, _value = (_hashmap).pairs[i].value; \
+    _i < (_hashmap).length; \
+    _i++, _key = (_hashmap).pairs[i].key, _value = (_hashmap).pairs[i].value \
+)
+
+/**
  * initializes a hashmap with `key_type` associated to `value_type`.
  */
 #define hashmap_init(hashmap, key_type, value_type) do { \
@@ -133,7 +143,6 @@ void tclhashmap_set(void* _hashmap, void* key, void* value);
 void tclhashmap_erase(void* _hashmap, void* key);
 void* tclhashmap_get(void* _hashmap, void* key);
 bool tclhashmap_exists(void* _hashmap, void* key);
-void tclhashmap_iterate(void* _hashmap, hashmap_iterator_t func, void* user_data);
 
 // ===========================
 // IMPLEMENTATION
@@ -296,17 +305,6 @@ bool tclhashmap_exists(void* _hashmap, void* key) {
     }
 
     return false;
-}
-
-void tclhashmap_iterate(void* _hashmap, hashmap_iterator_t func, void* user_data) {
-    TCLHASHMAP_BEGIN_FUNC();
-
-    for (size_t i = 0; i < hashmap->length; i++) {
-        struct _pair_t* current_pair = TCLHASHMAP_GET_PAIR(hashmap, i);
-        void* key = TCLHASHMAP_GET_KEY(hashmap, current_pair);
-        void* value = TCLHASHMAP_GET_VALUE(hashmap, current_pair);
-        func(key, value, user_data);
-    }
 }
 
 #endif
