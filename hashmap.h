@@ -109,11 +109,6 @@ hashmap_hash_func_t hashmap_get_hash_func();
 #define hashmap_exists(hashmap, key) tclhashmap_exists(&hashmap, &key)
 
 /**
- * calls the `iterator` for each key in the hashmap.
- */
-#define hashmap_iterate(hashmap, iterator, user_data) tclhashmap_iterate(&hashmap, iterator, user_data)
-
-/**
  * iterates through all the pairs in the hashmap. `_key` is set to the current key, `_value` is set to the current value, `i` is set to the index of the pair.
  */
 #define hashmap_foreach(_hashmap, _key, _value, _i) for (\
