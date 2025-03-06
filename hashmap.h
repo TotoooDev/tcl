@@ -36,8 +36,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <stdio.h>
+#include <assert.h>
 
 typedef size_t(*hashmap_hash_func_t)(uint8_t* buffer, size_t size);
 
@@ -98,6 +97,12 @@ hashmap_hash_func_t hashmap_get_hash_func();
 #define hashmap_get(hashmap, key) tclhashmap_get(&hashmap, &key)
 
 /**
+ * returns a pointer to the `i`-th pait in the hashmap.
+ * useful if you want to iterate throught the hashmap without using `hashmap_foreach`.
+ */
+#define hashmap_get_pair(hashmap, i) tclhashmap_get_pair(&hashmap, i)
+
+/**
  * removes `key` and its associated value from the hashmap.
  * does nothing if `key` is not found.
  */
@@ -137,6 +142,7 @@ hashmap_hash_func_t hashmap_get_hash_func();
 void tclhashmap_set(void* _hashmap, void* key, void* value);
 void tclhashmap_erase(void* _hashmap, void* key);
 void* tclhashmap_get(void* _hashmap, void* key);
+void* tclhashmap_get_pair(void* _hashmap, size_t index);
 bool tclhashmap_exists(void* _hashmap, void* key);
 
 // ===========================
@@ -285,6 +291,12 @@ void* tclhashmap_get(void* _hashmap, void* key) {
     }
 
     return NULL;
+}
+
+void* tclhashmap_get_pair(void* _hashmap, size_t index) {
+    TCLHASHMAP_BEGIN_FUNC();
+    assert(index >= 0 && index < hashmap->length);
+    return TCLHASHMAP_GET_PAIR(hashmap, index);
 }
 
 bool tclhashmap_exists(void* _hashmap, void* key) {
